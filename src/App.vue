@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import Button from './components/Button.vue';
 import CircleImg from './components/CircleImg.vue';
-import ReportesUsuario from './views/ReportesUsuario.vue';
+// import ReportesUsuario from './views/ReportesUsuario.vue';
+import CuboRutinas from './views/CuboRutinas.vue';
 
 
 
@@ -30,7 +31,7 @@ const handleButtonClick = () => {
     </aside>
     <div class="w-[85%] h-screen flex items-center justify-center">
       <div class="w-[65%] h-[700px] bg-white rounded-2xl shadow-lg border border-[#ccc]">
-        <ReportesUsuario />
+        <CuboRutinas />
       </div>
     </div>
   </div>
