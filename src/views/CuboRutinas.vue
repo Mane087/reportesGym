@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-//import { getRutinasUsuarios, getRutinaById, getRutinaBySatisfaccion, getRutinasUsuariosByDate } from '../API/reportes.ts';
+import { getData, getDataByTrainer, getDataBySucursal } from '../API/reportes.ts';
 
 
 const data = ref([]);
@@ -16,76 +16,96 @@ const searchData = async () => {
     const rango = parseInt(fecha.value);
     if (show) {
         if (rango == 1) {
-            console.log('Anual');
-
+            const response = await getData(1);
+            data.value = response;
         }
         if (rango == 2) {
-
+            const response = await getData(2);
+            data.value = response;
         }
         if (rango == 3) {
-            console.log('Anual');
+            const response = await getData(3);
+            data.value = response;
         }
     }
     if (showEntrenadores) {
         const trainer = parseInt(entrenador.value);
         if (rango == 1) {
             if (trainer == 1) {
-
+                const response = await getDataByTrainer(1, 1);
+                data.value = response;
             }
             if (trainer == 2) {
-
+                const response = await getDataByTrainer(1, 2);
+                data.value = response;
             }
             if (trainer == 3) {
-
+                const response = await getDataByTrainer(1, 3);
+                data.value = response;
             }
             if (trainer == 4) {
-
+                const response = await getDataByTrainer(1, 4);
+                data.value = response;
             }
             if (trainer == 5) {
-
+                const response = await getDataByTrainer(1, 5);
+                data.value = response;
             }
             if (trainer == 6) {
-
+                const response = await getDataByTrainer(1, 6);
+                data.value = response;
             }
         }
         if (rango == 2) {
             if (trainer == 1) {
-
+                const response = await getDataByTrainer(2, 1);
+                data.value = response;
             }
             if (trainer == 2) {
-
+                const response = await getDataByTrainer(2, 2);
+                data.value = response;
             }
             if (trainer == 3) {
-
+                const response = await getDataByTrainer(2, 3);
+                data.value = response;
             }
             if (trainer == 4) {
-
+                const response = await getDataByTrainer(2, 4);
+                data.value = response;
             }
             if (trainer == 5) {
-
+                const response = await getDataByTrainer(2, 5);
+                data.value = response;
             }
             if (trainer == 6) {
-
+                const response = await getDataByTrainer(2, 6);
+                data.value = response;
             }
         }
         if (rango == 3) {
             if (trainer == 1) {
-
+                const response = await getDataByTrainer(3, 1);
+                data.value = response;
             }
             if (trainer == 2) {
-
+                const response = await getDataByTrainer(3, 2);
+                data.value = response;
             }
             if (trainer == 3) {
-
+                const response = await getDataByTrainer(3, 3);
+                data.value = response;
             }
             if (trainer == 4) {
-
+                const response = await getDataByTrainer(3, 4);
+                data.value = response;
             }
             if (trainer == 5) {
-
+                const response = await getDataByTrainer(3, 5);
+                data.value = response;
             }
             if (trainer == 6) {
-
+                const response = await getDataByTrainer(3, 6);
+                data.value = response;
             }
         }
     }
@@ -94,44 +114,56 @@ const searchData = async () => {
         const sucur = parseInt(sucursal.value);
         if (rango == 1) {
             if (sucur == 1) {
-
+                const response = await getDataBySucursal(1, 1);
+                data.value = response;
             }
             if (sucur == 2) {
-
+                const response = await getDataBySucursal(1, 2);
+                data.value = response;
             }
             if (sucur == 3) {
-
+                const response = await getDataBySucursal(1, 3);
+                data.value = response;
             }
             if (sucur == 4) {
-
+                const response = await getDataBySucursal(1, 4);
+                data.value = response;
             }
         }
         if (rango == 2) {
             if (sucur == 1) {
-
+                const response = await getDataBySucursal(2, 1);
+                data.value = response;
             }
             if (sucur == 2) {
-
+                const response = await getDataBySucursal(2, 2);
+                data.value = response;
             }
             if (sucur == 3) {
-
+                const response = await getDataBySucursal(2, 3);
+                data.value = response;  
             }
             if (sucur == 4) {
-
+                const response = await getDataBySucursal(2, 4);
+                data.value = response;
             }
         }
         if (rango == 3) {
             if (sucur == 1) {
-
+                const response = await getDataBySucursal(3, 1);
+                data.value = response;
             }
             if (sucur == 2) {
-
+                const response = await getDataBySucursal(3, 2);
+                data.value = response;
             }
             if (sucur == 3) {
-
+                const response = await getDataBySucursal(3, 3);
+                data.value = response;
             }
             if (sucur == 4) {
-
+                const response = await getDataBySucursal(3, 4);
+                data.value = response;
             }
         }
     }
