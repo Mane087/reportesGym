@@ -48,7 +48,7 @@ export const getRutinaBySatisfaccion = async (
 };
 
 export const getData = async (periodo: number) => {
-  const reponse = await API.get(`/reportes/${periodo}`);
+  const reponse = await API.get(`/rutinas-usuario/date/${periodo}`);
   return reponse.data;
 }
 
@@ -56,7 +56,7 @@ export const getDataByTrainer = async (id: number, periodo: number) => {
   const params = {
     periodo: periodo,
   };
-  const response = await API.get(`/reportes/${id}`, { params });
+  const response = await API.get(`/rutinas-usuario/entrenador/${id}`, { params });
   return response.data;
 }
 
@@ -64,6 +64,6 @@ export const getDataBySucursal = async (id: number, periodo: number) => {
   const params = {
     periodo: periodo,
   };
-  const response = await API.get(`/reportes/${id}`, { params });
+  const response = await API.get(`/rutinas-usuario/sucursal/${id}`, { params });
   return response.data;
 }

@@ -1,16 +1,37 @@
 <script setup lang="ts">
+import { ref} from 'vue';
 import Button from './components/Button.vue';
 import CircleImg from './components/CircleImg.vue';
 // import ReportesUsuario from './views/ReportesUsuario.vue';
-import CuboRutinas from './views/CuboRutinas.vue';
+import CuboRutinas from './views/CuboBase.vue';
+import CuboEntrenadores from './views/CuboEntrenadores.vue';
+import CuboSucursales from './views/CuboSucursales.vue';
 
-
+const showCuboRutinas = ref(true);
+const showCuboEntrenadores = ref(false);
+const showCuboSucursales = ref(false);
 
 const handleButtonClick = () => {
   console.log('Button was clicked!');
 }
 
+const viewCuboSucursales = () => {
+  showCuboRutinas.value = false;
+  showCuboEntrenadores.value = false;
+  showCuboSucursales.value = true;
+};
 
+const viewCuboEntrenadores = () => {
+  showCuboRutinas.value = false;
+  showCuboEntrenadores.value = true;
+  showCuboSucursales.value = false;
+};
+
+const viewCubo = () => {
+  showCuboRutinas.value = true;
+  showCuboEntrenadores.value = false;
+  showCuboSucursales.value = false;
+};
 
 
 </script>
@@ -31,7 +52,14 @@ const handleButtonClick = () => {
     </aside>
     <div class="w-[80%] h-screen flex items-center justify-center">
       <div class="w-[90%] h-[500px] bg-white rounded-2xl shadow-lg border border-[#ccc]">
-        <CuboRutinas />
+        <div class="w-full h-max flex justify-center gap-x-5 p-2">
+            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCubo">Cara 1</button>
+            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboEntrenadores">Cara 2</button>
+            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboSucursales">Cara 3</button>
+        </div>
+        <CuboRutinas v-show="showCuboRutinas" />
+        <CuboEntrenadores v-show="showCuboEntrenadores" />
+        <CuboSucursales v-show="showCuboSucursales" />
       </div>
     </div>
   </div>
