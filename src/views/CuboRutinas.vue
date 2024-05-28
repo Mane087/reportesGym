@@ -1,36 +1,139 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { getRutinasUsuarios, getRutinaById, getRutinaBySatisfaccion, getRutinasUsuariosByDate } from '../API/reportes.ts';
+import { ref } from 'vue';
+//import { getRutinasUsuarios, getRutinaById, getRutinaBySatisfaccion, getRutinasUsuariosByDate } from '../API/reportes.ts';
+
 
 const data = ref([]);
-const rutinaId = ref('');
-const satisfaccion = ref('');
-const startDate = ref('');
-const endDate = ref('');
+const fecha = ref('');
+const show = ref(true);
+const showSucursales = ref(false);
+const showEntrenadores = ref(false);
+const sucursal = ref('');
+const entrenador = ref('');
 
-const searchDataUser = async () => {
-    const response = await getRutinasUsuarios();
-    data.value = response;
-};
 
 const searchData = async () => {
-    if (rutinaId.value) {
-        const id = parseInt(rutinaId.value);
-        const response = await getRutinaById(id);
-        data.value = response;
-    }
-    if (startDate.value && endDate.value) {
-        console.log(startDate.value, endDate.value);
+    const rango = parseInt(fecha.value);
+    if (show) {
+        if (rango == 1) {
+            console.log('Anual');
 
-        const response = await getRutinasUsuariosByDate(startDate.value, endDate.value);
-        data.value = response;
+        }
+        if (rango == 2) {
+
+        }
+        if (rango == 3) {
+            console.log('Anual');
+        }
+    }
+    if (showEntrenadores) {
+        const trainer = parseInt(entrenador.value);
+        if (rango == 1) {
+            if (trainer == 1) {
+
+            }
+            if (trainer == 2) {
+
+            }
+            if (trainer == 3) {
+
+            }
+            if (trainer == 4) {
+
+            }
+            if (trainer == 5) {
+
+            }
+            if (trainer == 6) {
+
+            }
+        }
+        if (rango == 2) {
+            if (trainer == 1) {
+
+            }
+            if (trainer == 2) {
+
+            }
+            if (trainer == 3) {
+
+            }
+            if (trainer == 4) {
+
+            }
+            if (trainer == 5) {
+
+            }
+            if (trainer == 6) {
+
+            }
+        }
+        if (rango == 3) {
+            if (trainer == 1) {
+
+            }
+            if (trainer == 2) {
+
+            }
+            if (trainer == 3) {
+
+            }
+            if (trainer == 4) {
+
+            }
+            if (trainer == 5) {
+
+            }
+            if (trainer == 6) {
+
+            }
+        }
     }
 
-    if (satisfaccion.value && rutinaId.value) {
-        const id = parseInt(rutinaId.value);
-        const satisfac = parseInt(satisfaccion.value)
-        const response = await getRutinaBySatisfaccion(id, satisfac);
-        data.value = response;
+    if (showSucursales) {
+        const sucur = parseInt(sucursal.value);
+        if (rango == 1) {
+            if (sucur == 1) {
+
+            }
+            if (sucur == 2) {
+
+            }
+            if (sucur == 3) {
+
+            }
+            if (sucur == 4) {
+
+            }
+        }
+        if (rango == 2) {
+            if (sucur == 1) {
+
+            }
+            if (sucur == 2) {
+
+            }
+            if (sucur == 3) {
+
+            }
+            if (sucur == 4) {
+
+            }
+        }
+        if (rango == 3) {
+            if (sucur == 1) {
+
+            }
+            if (sucur == 2) {
+
+            }
+            if (sucur == 3) {
+
+            }
+            if (sucur == 4) {
+
+            }
+        }
     }
 };
 
@@ -45,46 +148,94 @@ const formatDate = (dateString) => {
     });
 };
 
-onMounted(() => {
-    searchDataUser();
-});
+
+
+const viewCuboSucursales = () => {
+    showSucursales.value = true;
+    show.value = false;
+    showEntrenadores.value = false;
+};
+
+const viewCuboEntrenadores = () => {
+    showSucursales.value = false;
+    show.value = false;
+    showEntrenadores.value = true;
+    console.log(showEntrenadores.value);
+
+};
+
+const viewCubo = () => {
+    showSucursales.value = false;
+    show.value = true;
+    showEntrenadores.value = false;
+};
+
+
 
 </script>
 
 
 <template>
-    <div class="w-full h-full">
+    <div class="w-full h-max overflow-hidden">
 
-        <div class="w-[90%] h-[15%] mx-auto flex items-center justify-start border-b border-[#ccc]">
-            <h1 class="text-2xl font-bold">Reporte de progreso por usuario</h1>
+        <div class="w-full h-max flex justify-center gap-x-5 p-2">
+            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCubo">Cara 1</button>
+            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboEntrenadores">Cara 2</button>
+            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboSucursales">Cara 3</button>
+        </div>
+        <div class="w-[90%] h-max mx-auto py-5 flex flex-row justify-evenly">
+            <div v-if="show" class="h-full flex flex-row items-center gap-x-2">
+                <label class="font-bold">Rango de fecha</label>
+                <select class="p-2 border rounded-lg" v-model="fecha">
+                    <option value="3" selected>MENSUAL</option>
+                    <option value="2">SEMESTRAL</option>
+                    <option value="1">ANUAL</option>
+                </select>
+                <button class="px-2 rounded-md bg-blue-700 text-white" @click="searchData">Buscar</button>
+            </div>
+            <div v-if="showEntrenadores" class="h-full flex flex-row items-center gap-x-2">
+                <label class="font-bold">Rango de fecha</label>
+                <select class="p-2 border rounded-lg" v-model="fecha">
+                    <option value="3" selected>MENSUAL</option>
+                    <option value="2">SEMESTRAL</option>
+                    <option value="1">ANUAL</option>
+                </select>
+                <label class="font-bold">Entrenador</label>
+                <select class="p-2 border rounded-lg" v-model="entrenador">
+                    <option value="1" selected>Emmanuel Alaniz</option>
+                    <option value="2">Maria Gomez</option>
+                    <option value="3">Juan Perez</option>
+                    <option value="4">Luis Fernandez</option>
+                    <option value="5">Ana Martinez</option>
+                    <option value="6">Carlos Hernanez</option>
+                </select>
+            </div>
+            <div v-if="showSucursales" class="h-full flex flex-row items-center gap-x-2">
+                <label class="font-bold">Rango de fecha</label>
+                <select class="p-2 border rounded-lg" v-model="fecha">
+                    <option value="3" selected>MENSUAL</option>
+                    <option value="2">SEMESTRAL</option>
+                    <option value="1">ANUAL</option>
+                </select>
+                <label class="font-bold">Sucursales</label>
+                <select class="p-2 border rounded-lg" v-model="sucursal">
+                    <option value="1" selected>ZonaFitness</option>
+                    <option value="2">MuscleGym</option>
+                    <option value="3">Olimpus</option>
+                    <option value="4">GrulloFit</option>
+                </select>
+            </div>
         </div>
 
-        <div class="w-[90%] h-[10%] mx-auto py-5 flex flex-row justify-evenly">
-            <input type="text" v-model="rutinaId" placeholder="Identificador de la rutina"
-                class="w-max h-max border border-[#ccc] rounded-md py-2 px-3 bg-white text-black">
-            <input type="number" v-model="satisfaccion" placeholder="Satisfaccion" min="1" max="10"
-                class="w-[140px] h-max border border-[#ccc] rounded-md py-2 px-3 bg-white text-black">
-            <input type="date" v-model="startDate" placeholder="Fecha de inicio"
-                class="w-max h-max border border-[#ccc] rounded-md py-2 px-3 bg-white text-black">
-            <input type="date" v-model="endDate" placeholder="Fecha fin"
-                class="w-max h-max border border-[#ccc] rounded-md py-2 px-3 bg-white text-black">
-            <button class="w-max h-max bg-blue-700 text-white rounded-md py-2 px-3" @click="searchData">Buscar</button>
-            <button class="w-max h-max bg-blue-700 text-white rounded-md py-3 px-3" @click="searchDataUser">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDMyIDMyIj48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTggMjhBMTIgMTIgMCAxIDAgNiAxNnY2LjJsLTMuNi0zLjZMMSAyMGw2IDZsNi02bC0xLjQtMS40TDggMjIuMlYxNmExMCAxMCAwIDEgMSAxMCAxMFoiLz48L3N2Zz4="
-                    alt="">
-            </button>
-        </div>
-
-        <div class="w-[90%] h-[75%] mx-auto py-5 overflow-y-auto">
+        <div v-if="show" class="w-[90%] h-[90%] mx-auto py-5 overflow-y-auto">
             <table class="w-full h-full mb-5">
                 <thead>
                     <tr>
-                        <th class="border border-[#ccc]">Usuario</th>
-                        <th class="border border-[#ccc]">Rutina</th>
-                        <th class="border border-[#ccc]">Entrenador</th>
-                        <th class="border border-[#ccc]">Fecha inicio</th>
-                        <th class="border border-[#ccc]">Fecha fin</th>
-                        <th class="border border-[#ccc]">Satisfaccion</th>
+                        <th class="border border-[#ccc]">Entranodores</th>
+                        <th class="border border-[#ccc]">ZonaFitness</th>
+                        <th class="border border-[#ccc]">MuscleGym</th>
+                        <th class="border border-[#ccc]">Olimpus</th>
+                        <th class="border border-[#ccc]">GrulloFit</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -98,7 +249,54 @@ onMounted(() => {
                     </tr>
                 </tbody>
             </table>
-            <Chart :data="data" />
+        </div>
+        <div v-if="showSucursales" class="w-[90%] h-[90%] mx-auto py-5 overflow-y-auto">
+            <table class="w-full h-full mb-5">
+                <thead>
+                    <tr>
+                        <th class="border border-[#ccc]">Fechas</th>
+                        <th class="border border-[#ccc]">Emmanuel Alaniz</th>
+                        <th class="border border-[#ccc]">Maria Gomez</th>
+                        <th class="border border-[#ccc]">Juan Perez</th>
+                        <th class="border border-[#ccc]">Luis Fernandez</th>
+                        <th class="border border-[#ccc]">Ana Martinez</th>
+                        <th class="border border-[#ccc]">Carlos Hernanez</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in data" :key="item.id_progreso">
+                        <td class="border border-[#ccc] text-center">{{ item.usuario.nombre }}</td>
+                        <td class="border border-[#ccc] text-center">{{ item.rutina.nombre }}</td>
+                        <td class="border border-[#ccc] text-center">{{ item.entrenador.nombre }}</td>
+                        <td class="border border-[#ccc] text-center">{{ formatDate(item.fecha_inicio) }}</td>
+                        <td class="border border-[#ccc] text-center">{{ formatDate(item.fecha_fin) }}</td>
+                        <td class="border border-[#ccc] text-center">{{ item.satisfaccion }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div v-if="showEntrenadores" class="w-[90%] h-[90%] mx-auto py-5 overflow-y-auto">
+            <table class="w-full h-full mb-5">
+                <thead>
+                    <tr>
+                        <th class="border border-[#ccc]">Entranodores</th>
+                        <th class="border border-[#ccc]">ZonaFitness</th>
+                        <th class="border border-[#ccc]">MuscleGym</th>
+                        <th class="border border-[#ccc]">Olimpus</th>
+                        <th class="border border-[#ccc]">GrulloFit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="item in data" :key="item.id_progreso">
+                        <td class="border border-[#ccc] text-center">{{ item.usuario.nombre }}</td>
+                        <td class="border border-[#ccc] text-center">{{ item.rutina.nombre }}</td>
+                        <td class="border border-[#ccc] text-center">{{ item.entrenador.nombre }}</td>
+                        <td class="border border-[#ccc] text-center">{{ formatDate(item.fecha_inicio) }}</td>
+                        <td class="border border-[#ccc] text-center">{{ formatDate(item.fecha_fin) }}</td>
+                        <td class="border border-[#ccc] text-center">{{ item.satisfaccion }}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </template>

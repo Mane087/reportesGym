@@ -29,8 +29,8 @@ const handleButtonClick = () => {
       </div>
       <div></div>
     </aside>
-    <div class="w-[85%] h-screen flex items-center justify-center">
-      <div class="w-[65%] h-[700px] bg-white rounded-2xl shadow-lg border border-[#ccc]">
+    <div class="w-[80%] h-screen flex items-center justify-center">
+      <div class="w-[90%] h-[500px] bg-white rounded-2xl shadow-lg border border-[#ccc]">
         <CuboRutinas />
       </div>
     </div>
