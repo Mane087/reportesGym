@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref} from 'vue';
+import { ref } from 'vue';
 import Button from './components/Button.vue';
 import CircleImg from './components/CircleImg.vue';
 // import ReportesUsuario from './views/ReportesUsuario.vue';
@@ -7,13 +7,31 @@ import CuboRutinas from './views/CuboBase.vue';
 import CuboEntrenadores from './views/CuboEntrenadores.vue';
 import CuboSucursales from './views/CuboSucursales.vue';
 
+import ChartEjercicios from './components/ChartEjercicios.vue';
+import ChartRutinas from './components/ChartRutinas.vue';
+import ChartDoughnut from './components/ChartDoughnut.vue';
+
+import logo from './assets/Blue Business Architecture Design Logo - Logos.png';
+
+const rutinas = ref([
+  { nombre: 'Pecho Alto', satisfaccion: 9 },
+  { nombre: 'Brazos Fuertes', satisfaccion: 7 },
+  { nombre: 'Full body', satisfaccion: 6 }
+]);
+
+const maquinas = ref([
+  { nombre: 'Banco plano', uso: 15 },
+  { nombre: 'Banco inclinado', uso: 10 },
+  { nombre: 'Smith', uso: 9 }
+]);
+
+
+
+
 const showCuboRutinas = ref(true);
 const showCuboEntrenadores = ref(false);
 const showCuboSucursales = ref(false);
 
-const handleButtonClick = () => {
-  console.log('Button was clicked!');
-}
 
 const viewCuboSucursales = () => {
   showCuboRutinas.value = false;
@@ -37,29 +55,55 @@ const viewCubo = () => {
 </script>
 
 <template>
-  <div class="w-full h-screen flex flex-row bg-slate-200">
-    <aside class="w-[15%] h-screen bg-blue-700 flex flex-col py-5">
+  <div class="w-full h-screen flex flex-row bg-[#181818]">
+    <aside class="w-[15%] h-screen bg-[#1D3A50] flex flex-col py-5">
       <div class="w-full h-max flex justify-center">
         <CircleImg
-          src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNDAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgMjQgMjQiPjxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0xMiA1Yy0xLjExIDAtMiAuODktMiAycy44OSAyIDIgMnMyLS44OSAyLTJzLS44OS0yLTItMm0xMC00djVoLTJWNEg0djJIMlYxaDJ2MmgxNlYxem0tNyAxMC4yNlYyM2gtMnYtNWgtMnY1SDlWMTEuMjZDNi45MyAxMC4xNyA1LjUgOCA1LjUgNS41VjVoMnYuNUM3LjUgOCA5LjUgMTAgMTIgMTBzNC41LTIgNC41LTQuNVY1aDJ2LjVjMCAyLjUtMS40MyA0LjY3LTMuNSA1Ljc2Ii8+PC9zdmc+"
+          src=""
           alt="Logotipo-gymapp" />
       </div>
       <div class="w-full h-max flex flex-col items-center gap-y-5">
-        <Button text="Reporte de progreso" @click="handleButtonClick" />
-        <Button text="Reporte de satisfaccion rutinas" @click="handleButtonClick" />
+        
       </div>
       <div></div>
     </aside>
     <div class="w-[80%] h-screen flex items-center justify-center">
-      <div class="w-[90%] h-[500px] bg-white rounded-2xl shadow-lg border border-[#ccc]">
+      <!-- <div class="w-[90%] h-[500px] bg-white rounded-2xl shadow-lg border border-[#ccc]">
         <div class="w-full h-max flex justify-center gap-x-5 p-2">
-            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCubo">Cara 1</button>
-            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboEntrenadores">Cara 2</button>
-            <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboSucursales">Cara 3</button>
+          <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCubo">Cara 1</button>
+          <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboEntrenadores">Cara 2</button>
+          <button class="px-2 rounded-md bg-blue-700 text-white" @click="viewCuboSucursales">Cara 3</button>
         </div>
         <CuboRutinas v-show="showCuboRutinas" />
         <CuboEntrenadores v-show="showCuboEntrenadores" />
         <CuboSucursales v-show="showCuboSucursales" />
+      </div> -->
+      <div class="w-[90%] h-[90%]">
+        <div class="w-full h-max flex flex-row  justify-center items-center gap-x-3">
+          <div class="w-[220px] h-[200px] rounded-lg bg-[#ebebeb] flex flex-col items-center justify-center">
+            <h1 class="text-2xl">Clientes</h1>
+            <ChartDoughnut :value="66" :max="250" />
+          </div>
+          <div class="w-[220px] h-[200px] rounded-lg bg-[#ebebeb] flex flex-col items-center justify-center">
+            <h1 class="text-2xl">Sucursales</h1>
+            <ChartDoughnut :value="4" :max="50" />
+          </div>
+          <div class="w-[220px] h-[200px] rounded-lg bg-[#ebebeb] flex flex-col items-center justify-center">
+            <h1 class="text-2xl">Entrenadores</h1>
+            <ChartDoughnut :value="6" :max="50" />
+          </div>
+        
+        </div>
+        <div class="w-full h-max flex flex-row justify-center items-center py-3 gap-x-3">
+          <div class="w-[450px] h-[350px] rounded-lg bg-[#ebebeb] flex flex-col items-center justify-center">
+            <h1 class="text-2xl">Rutinas populares</h1>
+            <ChartRutinas :data="rutinas" />
+          </div>
+          <div class="w-[450px] h-[350px] rounded-lg bg-[#ebebeb] flex flex-col items-center justify-center">
+            <h1 class="text-2xl">Equipos mas usados</h1>
+            <ChartEjercicios :data="maquinas" />
+          </div> 
+        </div>
       </div>
     </div>
   </div>
