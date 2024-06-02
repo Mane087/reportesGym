@@ -8,5 +8,5 @@
 </script>
 
 <template>
-    <img :src="props.src" :alt="props.alt" class="w-[70%] h-[70%]">
+    <img :src="props.src" :alt="props.alt" class="w-[90%] h-[90%]">
 </template>
