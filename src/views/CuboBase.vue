@@ -3,52 +3,82 @@ import { ref } from 'vue';
 import { getData } from '../API/reportes.ts';
 
 const data = ref([]);
-const fecha = ref('');
+const fecha = ref('3'); // Default to "MENSUAL"
+const entrenadores = ref([]);
+const sucursales = ref([]);
 
+const fetchNames = async () => {
+    // Fetch the names of the trainers and branches
+    entrenadores.value = [
+        { id: 1, nombre: 'Emmanuel Alaniz' },
+        { id: 2, nombre: 'Maria Gomez' },
+        { id: 3, nombre: 'Juan Perez' },
+        { id: 4, nombre: 'Luis Fernandez' },
+        { id: 5, nombre: 'Ana Martinez' },
+        { id: 6, nombre: 'Carlos Hernandez' },
+    ];
+
+    sucursales.value = [
+        { id: 1, nombre: 'ZonaFitness' },
+        { id: 2, nombre: 'MuscleGym' },
+        { id: 3, nombre: 'Olimpus' },
+        { id: 34, nombre: 'GrulloFit' }
+    ];
+};
 
 const searchData = async () => {
+    data.value = await getData();
+    filterData();
+};
 
-    if (fecha.value) {
-        const rango = parseInt(fecha.value);
-        const response = await getData(rango);
-        data.value = response;
-        console.log('entro a 1');
+const filterData = () => {
+    const startDate = new Date('2024-01-01');
+    let endDate = new Date('2024-12-01');
+
+    if (fecha.value === '3') {
+        endDate = new Date('2024-05-01');
+    } else if (fecha.value === '2') {
+        endDate = new Date('2024-06-01');
     }
 
-};
-
-
-const getCount = (sucursalNombre, entrenadorId) => {
-    const sucursal = data.value.find((suc) => suc.sucursal === sucursalNombre);
-    if (!sucursal) return 0;
-
-    const entrenador = sucursal.entrenadores.find((ent) => ent.entrenador.id === entrenadorId);
-    console.log('entrenador en la primera cara', entrenador);
-    return entrenador ? entrenador.count : 0;
-};
-
-
-const uniqueEntrenadores = () => {
-    const entrenadorMap = {};
-    data.value.forEach((sucursal) => {
-        sucursal.entrenadores.forEach((entrenador) => {
-            if (!entrenadorMap[entrenador.entrenador.id]) {
-                entrenadorMap[entrenador.entrenador.id] = {
-                    id: entrenador.entrenador.id,
-                    nombre: entrenador.entrenador.nombre,
-                    apellido: entrenador.entrenador.apellido,
-                };
-            }
-        });
+    const filteredData = data.value.filter((item) => {
+        const itemStartDate = new Date(item.fecha_inicio);
+        const itemEndDate = new Date(item.fecha_fin);
+        return itemStartDate >= startDate && itemEndDate <= endDate;
     });
-    return Object.values(entrenadorMap);
+
+    // Aggregate data
+    const aggregatedData = {};
+    filteredData.forEach((item) => {
+        const entrenador = item.id_entrenador;
+        const sucursal = item.id_sucursal;
+
+        if (!aggregatedData[entrenador]) {
+            aggregatedData[entrenador] = {};
+        }
+
+        if (!aggregatedData[entrenador][sucursal]) {
+            aggregatedData[entrenador][sucursal] = 0;
+        }
+
+        aggregatedData[entrenador][sucursal] += item._count.id_usuario;
+    });
+
+    // Update entrenadores with counts
+    entrenadores.value.forEach((entrenador) => {
+        entrenador.ZonaFitness = aggregatedData[entrenador.id]?.[1] || 0;
+        entrenador.MuscleGym = aggregatedData[entrenador.id]?.[2] || 0;
+        entrenador.Olimpus = aggregatedData[entrenador.id]?.[3] || 0;
+        entrenador.GrulloFit = aggregatedData[entrenador.id]?.[34] || 0;
+    });
 };
 
+// Fetch initial data
+fetchNames();
 </script>
 
 <template>
     <div class="w-full h-max overflow-hidden">
-
         <div class="w-[90%] h-max mx-auto py-5 flex flex-row justify-evenly items-center">
             <div class="h-full flex flex-row items-center gap-x-2">
                 <label class="font-bold">Rango de fecha</label>
@@ -73,17 +103,15 @@ const uniqueEntrenadores = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="entrenador in uniqueEntrenadores()" :key="entrenador.id">
-                        <td class="border border-[#ccc] text-center">{{ entrenador.nombre }} {{ entrenador.apellido }}
-                        </td>
-                        <td class="border border-[#ccc] text-center">{{ getCount('ZonaFitness', entrenador.id) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount('Muscle Gym', entrenador.id) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount('Olimpus', entrenador.id) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount('GrulloFit', entrenador.id) }}</td>
+                    <tr v-for="entrenador in entrenadores" :key="entrenador.id">
+                        <td class="border border-[#ccc]">{{ entrenador.nombre }}</td>
+                        <td class="border border-[#ccc]">{{ entrenador.ZonaFitness }}</td>
+                        <td class="border border-[#ccc]">{{ entrenador.MuscleGym }}</td>
+                        <td class="border border-[#ccc]">{{ entrenador.Olimpus }}</td>
+                        <td class="border border-[#ccc]">{{ entrenador.GrulloFit }}</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-
     </div>
 </template>

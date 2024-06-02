@@ -47,23 +47,17 @@ export const getRutinaBySatisfaccion = async (
   return response.data;
 };
 
-export const getData = async (periodo: number) => {
-  const reponse = await API.get(`/rutinas-usuario/date/${periodo}`);
+export const getData = async () => {
+  const reponse = await API.get(`/entrenamientos/getAll`);
   return reponse.data;
 }
 
-export const getDataByTrainer = async (id: number, periodo: number) => {
-  const params = {
-    periodo: periodo,
-  };
-  const response = await API.get(`/rutinas-usuario/entrenador/${id}`, { params });
+export const getDataByTrainer = async (id_entrenador: number) => {
+  const response = await API.get(`/entrenamientos/getByEntrenador/${id_entrenador}`);
   return response.data;
 }
 
-export const getDataBySucursal = async (id: number, periodo: number) => {
-  const params = {
-    periodo: periodo,
-  };
-  const response = await API.get(`/rutinas-usuario/sucursal/${id}`, { params });
+export const getDataBySucursal = async (id_sucursal: number) => {
+  const response = await API.get(`/entrenamientos/getBySucursal/${id_sucursal}`);
   return response.data;
 }

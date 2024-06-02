@@ -1,71 +1,88 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { getDataBySucursal } from '../API/reportes.ts';
 
 const data = ref([]);
-const fecha = ref('');
 const sucursal = ref('');
-const meses = ref([]);
+const fecha = ref(''); // Default to "MENSUAL"
+const meses = ref([
+    { name: 'Enero', value: 0 },
+    { name: 'Febrero', value: 1 },
+    { name: 'Marzo', value: 2 },
+    { name: 'Abril', value: 3 },
+    { name: 'Mayo', value: 4 },
+    { name: 'Junio', value: 5 },
+    { name: 'Julio', value: 6 },
+    { name: 'Agosto', value: 7 },
+    { name: 'Septiembre', value: 8 },
+    { name: 'Octubre', value: 9 },
+    { name: 'Noviembre', value: 10 },
+    { name: 'Diciembre', value: 11 },
+]);
 
 const searchData = async () => {
-    if (fecha.value && sucursal.value) {
-        const rango = parseInt(fecha.value);
-        const sucurl = parseInt(sucursal.value);
-        const response = await getDataBySucursal(sucurl, rango);
-        data.value = response;
-        console.log('Datos obtenidos:', response);
-
-        const { startDate, endDate } = getStartEndDates(rango);
-        meses.value = generateMonths(startDate, endDate);
-    }
+    const sucurl = parseInt(sucursal.value);
+    data.value = await getDataBySucursal(sucurl);
+    console.log('Datos obtenidos:', data.value);
 };
 
-// Función para la primera tabla
-const getCount = (entrenadorId, month) => {
-    const monthIndex = new Date(month).getMonth();
-    const entrenadorData = data.value.flatMap((suc) => 
-        suc.entrenadores.map((ent) => ({
-            entrenadorId: ent.entrenador.id,
-            count: ent.count,
-            month: monthIndex
-        }))
-    ).find((ent) => ent.entrenadorId === entrenadorId && ent.month === monthIndex);
+const filteredData = computed(() => {
+    let startDate = new Date('2024-01-01');
+    let endDate = new Date('2024-12-31');
 
-    return entrenadorData ? entrenadorData.count : 0;
-};
-
-const generateMonths = (startDate, endDate) => {
-    const dates = [];
-    const currentDate = new Date(startDate);
-
-    while (currentDate <= endDate) {
-        dates.push(new Date(currentDate));
-        currentDate.setMonth(currentDate.getMonth() + 1);
+    if (fecha.value === '3') {
+        // Mensual
+        console.log('Filtrando por mes');
+        endDate = new Date('2024-05-31');
+    } else if (fecha.value === '2') {
+        // Semestral
+        console.log('Filtrando por semestre');
+        endDate = new Date('2024-06-30');
     }
 
-    return dates;
-};
+    console.log('Fechas de filtro:', startDate, endDate);
 
-const getStartEndDates = (rango) => {
-    const currentDate = new Date();
-    let startDate;
-    let endDate;
+    return data.value.filter((item) => {
+        const itemStartDate = new Date('2024-01-01');
+        const itemEndDate = new Date('2024-12-31');
+        console.log('Fechas del ítem:', itemStartDate, itemEndDate);
+        return itemStartDate <= endDate && itemEndDate >= startDate;
+    });
+});
 
-    if (rango === 3) { // MENSUAL
-        startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
-        endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-    } else if (rango === 2) { // SEMESTRAL
-        startDate = new Date(currentDate.getFullYear(), currentDate.getMonth() - 4, 1);
-        endDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
-    } else if (rango === 1) { // ANUAL
-        startDate = new Date(currentDate.getFullYear(), 0, 1);
-        endDate = new Date(currentDate.getFullYear(), 11, 31);
+const aggregatedData = computed(() => {
+    const aggregated = {};
+
+    filteredData.value.forEach((item) => {
+        const month = new Date('2024-05-31').getMonth();
+        console.log('Mes:', month);
+
+        const entrenador = item.id_entrenador;
+
+        if (!aggregated[month]) {
+            aggregated[month] = {};
+        }
+
+        if (!aggregated[month][entrenador]) {
+            aggregated[month][entrenador] = 0;
+        }
+
+        aggregated[month][entrenador] += item._count.id_usuario;
+    });
+
+    console.log('Datos agregados:', aggregated);
+    return aggregated;
+});
+
+const getFilteredMonths = () => {
+    let months = meses.value;
+    if (fecha.value === '3') {
+        months = [meses.value[4]]; // Solo Mayo
+    } else if (fecha.value === '2') {
+        months = meses.value.slice(0, 6); // Enero a Junio
     }
-
-    return { startDate, endDate };
+    return months;
 };
-
-searchData();
 </script>
 
 <template>
@@ -101,16 +118,20 @@ searchData();
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="month in meses" :key="month">
-                        <td class="border border-[#ccc] text-center">{{ new Intl.DateTimeFormat('es-MX', {
-                            year: 'numeric', month: 'long'
-                        }).format(month) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount(1, month) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount(2, month) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount(3, month) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount(4, month) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount(5, month) }}</td>
-                        <td class="border border-[#ccc] text-center">{{ getCount(6, month) }}</td>
+                    <tr v-for="month in getFilteredMonths()" :key="month.value">
+                        <td class="border border-[#ccc]">{{ month.name }}</td>
+                        <td class="border border-[#ccc]">{{ aggregatedData[month.value] ? aggregatedData[month.value][1]
+                            || 0 : 0 }}</td>
+                        <td class="border border-[#ccc]">{{ aggregatedData[month.value] ? aggregatedData[month.value][2]
+                            || 0 : 0 }}</td>
+                        <td class="border border-[#ccc]">{{ aggregatedData[month.value] ? aggregatedData[month.value][3]
+                            || 0 : 0 }}</td>
+                        <td class="border border-[#ccc]">{{ aggregatedData[month.value] ?
+                            aggregatedData[month.value][4] || 0 : 0 }}</td>
+                        <td class="border border-[#ccc]">{{ aggregatedData[month.value] ?
+                            aggregatedData[month.value][5] || 0 : 0 }}</td>
+                        <td class="border border-[#ccc]">{{ aggregatedData[month.value] ?
+                            aggregatedData[month.value][6] || 0 : 0 }}</td>
                     </tr>
                 </tbody>
             </table>
